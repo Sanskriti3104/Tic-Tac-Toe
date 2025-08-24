@@ -7,11 +7,11 @@
 }
 
 :root {
-    --primary-color: #2d3748;  
-    --secondary-color: #4a5568; 
-    --background-color: #f7fafc; 
-    --accent-color: #3182ce; 
-    --border-color: #e2e8f0; 
+    --primary-color: #2d3748;
+    --secondary-color: #4a5568;
+    --background-color: #f7fafc;
+    --accent-color: #3182ce;
+    --border-color: #e2e8f0;
     --button-bg: #4a5568;
     --button-hover: #2d3748;
 }
@@ -95,6 +95,58 @@ h1 {
 .score-board {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    background-color: #f8fafc;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    margin-top: 20px;
+}
+
+.score-title {
+    font-size: 1.2rem;
+    color: #4a5568;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.scores {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 7px;
+}
+
+.score {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #ffffff;
+     text-align: center;
+            padding: 0 15px;
+
+}
+
+.score:hover {
+    background: #edf2f7;
+    transform: scale(1.05);
+}
+
+.score-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--accent-color);
+}
+
+.score-label {
+    font-size: 0.95rem;
+    color: var(--secondary-color);
+    margin-top: 5px;
+}
+
+/* .score-board {
+    display: flex;
+    flex-direction: column;
     justify-content: center;
 }
 
@@ -126,7 +178,7 @@ h1 {
 .score-label {
     font-size: 0.95rem;
     color: #718096;
-}
+} */
 
 /* Controls */
 .controls {
