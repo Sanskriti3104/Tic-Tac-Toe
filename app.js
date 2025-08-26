@@ -152,12 +152,32 @@ function screenController() {
   const cells = document.querySelectorAll(".cell");
   const scoreX = document.querySelector(".score-x");
   const scoreO = document.querySelector(".score-o");
+  const scoreDraw = document.querySelector(".draw");
 
   const game = GameController();
 
+  let scores = {
+    X: 0,
+    O: 0,
+    D: 0
+  };
+
   const updateStatus = (message) => {
     statusDiv.textContent = message;
-  }
+  };
+
+  const updateScoreBoard = (message) => {
+    if(message.includes("Player X wins")){
+      scores.X++;
+      scoreX.textContent = scores.X;
+    } else if(message.includes("Player O wins")){
+      scores.O++;
+      scoreO.textContent = scores.O;
+    } else if(message.includes("It's a draw!")){
+      scores.D++;
+      scoreDraw.textContent = scores.D;
+    }
+  };
 
   cells.forEach((cell, index) => {
     const row = Math.floor(index / 3);
@@ -165,9 +185,12 @@ function screenController() {
 
     cell.addEventListener("click", () => {
       const token = game.getActivePlayer().token;
-      cell.textContent = token;
+      if(cell.textContent === ""){
+        cell.textContent = token;
+      }
       const message = game.playRound(row, col);
       updateStatus(message);
+      updateScoreBoard(message);
     });
   });
 }

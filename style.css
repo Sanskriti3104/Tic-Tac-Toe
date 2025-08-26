@@ -122,9 +122,8 @@ h1 {
     flex-direction: column;
     align-items: center;
     background: #ffffff;
-     text-align: center;
-            padding: 0 15px;
-
+    text-align: center;
+    padding: 0 15px;
 }
 
 .score:hover {
@@ -143,42 +142,6 @@ h1 {
     color: var(--secondary-color);
     margin-top: 5px;
 }
-
-/* .score-board {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.score-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--primary-color);
-    margin-bottom: 10px;
-}
-
-.scores {
-    display: flex;
-    justify-content: space-evenly;
-    gap: 8px;
-}
-
-.score {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.score-value {
-    font-size: 1.8rem;
-    color: var(--primary-color);
-    font-weight: bold;
-}
-
-.score-label {
-    font-size: 0.95rem;
-    color: #718096;
-} */
 
 /* Controls */
 .controls {
