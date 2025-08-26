@@ -47,7 +47,7 @@ function cell() {
   };
 }
 
-function GameController(playerOne = 'playerX', playerTwo = 'playerO') {
+function GameController(playerOne = 'Player X', playerTwo = 'Player O') {
   const players = [
     { playerName: playerOne, token: 'X' },
     { playerName: playerTwo, token: 'O' }
@@ -59,6 +59,7 @@ function GameController(playerOne = 'playerX', playerTwo = 'playerO') {
 
   const switchPlayer = () => {
     activePlayer = (activePlayer == players[0]) ? players[1] : players[0];
+    return `${activePlayer.playerName}'s turn`;
   }
 
   const getActivePlayer = () => {
@@ -69,18 +70,18 @@ function GameController(playerOne = 'playerX', playerTwo = 'playerO') {
 
   const checkWin = (row, col) => {
     const directions = [
-      {dr:0,dc:1}, //horizontal
-      {dr:1,dc:0}, //vertical
-      {dr:1,dc:1}, //diagonal right
-      {dr:1,dc:-1} //diagonal left
+      { dr: 0, dc: 1 }, //horizontal
+      { dr: 1, dc: 0 }, //vertical
+      { dr: 1, dc: 1 }, //diagonal right
+      { dr: 1, dc: -1 } //diagonal left
     ];
 
-    for(const {dr,dc} of directions){
+    for (const { dr, dc } of directions) {
       let count = 1;
       let r = row + dr;
       let c = col + dc;
 
-      while (r>=0 && r<3 && c>=0 && c<3 && board.getBoard()[r][c].getValue() === activePlayer.token){
+      while (r >= 0 && r < 3 && c >= 0 && c < 3 && board.getBoard()[r][c].getValue() === activePlayer.token) {
         count++;
         r += dr;
         c += dc;
@@ -89,13 +90,13 @@ function GameController(playerOne = 'playerX', playerTwo = 'playerO') {
       r = row - dr;
       c = col - dc;
 
-    while (r>=0 && r<3 && c>=0 && c<3 && board.getBoard()[r][c].getValue() === activePlayer.token){
+      while (r >= 0 && r < 3 && c >= 0 && c < 3 && board.getBoard()[r][c].getValue() === activePlayer.token) {
         count++;
         r -= dr;
         c -= dc;
       }
 
-      if(count >= 3)  return true;
+      if (count >= 3) return true;
     }
     return false;
   };
@@ -106,35 +107,36 @@ function GameController(playerOne = 'playerX', playerTwo = 'playerO') {
 
   const printRound = () => {
     board.printBoard();
-   if(!gameOver)  console.log(`${activePlayer.playerName}'s turn.`);
+    if (!gameOver) console.log(`${activePlayer.playerName}'s turn.`);
   }
 
   const playRound = (row, col) => {
-    if(gameOver) return;
+    if (gameOver) return "Game Over";
 
     const lastMove = board.dropToken(row, col, activePlayer.token);
-    if(!lastMove){
+    if (!lastMove) {
       console.log("Cell already occupied. Try again!");
-      return;
+      return "Cell already occupied. Try again!";
     }
 
-    const{ row: r,col: c } = lastMove;
-    if(checkWin(r,c)){
+    const { row: r, col: c } = lastMove;
+    if (checkWin(r, c)) {
       board.printBoard();
       console.log(`${activePlayer.playerName} wins!`);
       gameOver = true;
-      return;
+      return `${activePlayer.playerName} wins!`;
     }
 
-    if(isBoardFull()){
+    if (isBoardFull()) {
       board.printBoard();
       console.log("It's a draw!");
       gameOver = true;
-      return;
+      return "It's a draw!";
     }
 
-    switchPlayer();
+    const statusMessage = switchPlayer(); 
     printRound();
+    return statusMessage;
   }
 
   printRound();
@@ -145,4 +147,29 @@ function GameController(playerOne = 'playerX', playerTwo = 'playerO') {
   };
 }
 
-const game = GameController();
+function screenController() {
+  const statusDiv = document.querySelector(".status");
+  const cells = document.querySelectorAll(".cell");
+  const scoreX = document.querySelector(".score-x");
+  const scoreO = document.querySelector(".score-o");
+
+  const game = GameController();
+
+  const updateStatus = (message) => {
+    statusDiv.textContent = message;
+  }
+
+  cells.forEach((cell, index) => {
+    const row = Math.floor(index / 3);
+    const col = index % 3;
+
+    cell.addEventListener("click", () => {
+      const token = game.getActivePlayer().token;
+      cell.textContent = token;
+      const message = game.playRound(row, col);
+      updateStatus(message);
+    });
+  });
+}
+
+screenController();
