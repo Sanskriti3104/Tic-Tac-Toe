@@ -173,3 +173,74 @@ button:hover {
 button:active {
     transform: translateY(0);
 }
+
+/* Responsive Design */
+
+/* For tablets and medium screens */
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr;
+        padding: 20px;
+    }
+
+    .cell {
+        height: 80px;
+        font-size: 2.2rem;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    .scores {
+        gap: 10px;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 0.95rem;
+    }
+}
+
+/* For small screens (mobile) */
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 15px;
+        gap: 15px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .status {
+        font-size: 1rem;
+        padding: 10px;
+    }
+
+    .board {
+        gap: 8px;
+    }
+
+    .cell {
+        height: 70px;
+        font-size: 2rem;
+    }
+
+    .score-board {
+        padding: 15px;
+    }
+
+    .score-value {
+        font-size: 1.5rem;
+    }
+
+    button {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+    }
+}
