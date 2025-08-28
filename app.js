@@ -1,19 +1,21 @@
-console.log("TIC-TAC-TOE");
-
+// GameBoard function creates and manages the Tic-Tac-Toe board
 function GameBoard() {
   const rows = 3;
   const columns = 3;
   const board = [];
 
+  // Initialize the board with empty cells
   for (let i = 0; i < rows; i++) {
     board[i] = [];
     for (let j = 0; j < columns; j++) {
-      board[i][j] = cell();
+      board[i][j] = cell(); //Each cell is an object with method
     }
   }
 
+  // Returns the current board
   const getBoard = () => board;
 
+  // Drops a token into the cell if it is empty
   const dropToken = (row, col, token) => {
     if (board[row][col].getValue() === ' ') {
       board[row][col].addToken(token);
@@ -21,24 +23,27 @@ function GameBoard() {
     }
   };
 
-  const printBoard = () => {
-    console.log(board.map(row => row.map(cell => cell.getValue())));
-  };
+  // const printBoard = () => {
+  //   console.log(board.map(row => row.map(cell => cell.getValue())));
+  // };
 
   return {
     getBoard,
     dropToken,
-    printBoard
+    //printBoard
   };
 }
 
+// Cell function represents a single cell 
 function cell() {
   let value = ' ';
 
+  // Add tokens to the cell
   const addToken = (token) => {
     value = token;
   };
 
+  // Return the current value of cell
   const getValue = () => value;
 
   return {
@@ -47,27 +52,34 @@ function cell() {
   };
 }
 
+// GameController function manages the game logic and flow
 function GameController(playerOne = 'Player X', playerTwo = 'Player O') {
   const players = [
     { playerName: playerOne, token: 'X' },
     { playerName: playerTwo, token: 'O' }
   ];
 
+  // Initialize th board
   const board = GameBoard();
 
+  // Start with player X
   let activePlayer = players[0];
 
+  // Function to switch the player
   const switchPlayer = () => {
     activePlayer = (activePlayer == players[0]) ? players[1] : players[0];
     return `${activePlayer.playerName}'s turn`;
   }
 
+  // Return the current active player
   const getActivePlayer = () => {
     return activePlayer;
   }
 
+  // Flag to track the game state 
   let gameOver = false;
 
+  // Check if last move resulted in a win
   const checkWin = (row, col) => {
     const directions = [
       { dr: 0, dc: 1 }, //horizontal
@@ -76,11 +88,13 @@ function GameController(playerOne = 'Player X', playerTwo = 'Player O') {
       { dr: 1, dc: -1 } //diagonal left
     ];
 
+    // Checkk all directions for 3 in a row
     for (const { dr, dc } of directions) {
       let count = 1;
       let r = row + dr;
       let c = col + dc;
 
+      // Check in positive direction 
       while (r >= 0 && r < 3 && c >= 0 && c < 3 && board.getBoard()[r][c].getValue() === activePlayer.token) {
         count++;
         r += dr;
@@ -90,55 +104,64 @@ function GameController(playerOne = 'Player X', playerTwo = 'Player O') {
       r = row - dr;
       c = col - dc;
 
+      // Check in negative direction
       while (r >= 0 && r < 3 && c >= 0 && c < 3 && board.getBoard()[r][c].getValue() === activePlayer.token) {
         count++;
         r -= dr;
         c -= dc;
       }
 
+      // If three in a row are found
       if (count >= 3) return true;
     }
     return false;
   };
 
+  // Check if the board is full (draw)
   const isBoardFull = () => {
     return board.getBoard().every(row => row.every(cell => cell.getValue() !== ' '));
   }
 
-  const printRound = () => {
-    board.printBoard();
-    if (!gameOver) console.log(`${activePlayer.playerName}'s turn.`);
-  }
+  // const printRound = () => {
+  //   board.printBoard();
+  //   if (!gameOver) console.log(`${activePlayer.playerName}'s turn.`);
+  // }
 
+  // Main function to play a round 
   const playRound = (row, col) => {
-    if (gameOver) return "Game Over";
+    if (gameOver) return "Game Over"; //  Stop if game is over
 
     const lastMove = board.dropToken(row, col, activePlayer.token);
     if (!lastMove) {
-      console.log("Cell already occupied. Try again!");
       return "Cell already occupied. Try again!";
     }
 
+     // Extract the last move's row and column
     const { row: r, col: c } = lastMove;
+
+    // Check for win
     if (checkWin(r, c)) {
-      board.printBoard();
-      console.log(`${activePlayer.playerName} wins!`);
+      // board.printBoard();
+      // console.log(`${activePlayer.playerName} wins!`);
       gameOver = true;
       return `${activePlayer.playerName} wins!`;
     }
 
+    // Check for draw
     if (isBoardFull()) {
-      board.printBoard();
-      console.log("It's a draw!");
+      // board.printBoard();
+      // console.log("It's a draw!");
       gameOver = true;
       return "It's a draw!";
     }
 
+    // Switch player
     const statusMessage = switchPlayer();
-    printRound();
+    //printRound();
     return statusMessage;
   };
 
+  // Restart the game 
   const restartGame = () => {
     activePlayer = players[0];
     gameOver = false;
@@ -149,7 +172,7 @@ function GameController(playerOne = 'Player X', playerTwo = 'Player O') {
     }
   };
 
-  printRound();
+  //printRound();
 
   return {
     getActivePlayer,
@@ -158,7 +181,9 @@ function GameController(playerOne = 'Player X', playerTwo = 'Player O') {
   };
 }
 
-function screenController() {
+// ScreenController function manages the UI interactions
+function ScreenController() {
+  // Get DOM elements
   const statusDiv = document.querySelector(".status");
   const cells = document.querySelectorAll(".cell");
   const scoreX = document.querySelector(".score-x");
@@ -167,18 +192,21 @@ function screenController() {
   const restartBtn = document.querySelector(".restart-button");
   const resetScoreBtn = document.querySelector(".reset-score");
 
-  const game = GameController();
+  const game = GameController();  // Create a new game instance
 
+  // Score tracking
   let scores = {
     X: 0,
     O: 0,
     D: 0
   };
 
+  // Updates the status on the screen
   const updateStatus = (message) => {
     statusDiv.textContent = message;
   };
 
+  // Update the score board on the screen
   const updateScoreBoard = (message) => {
     if (message.includes("Player X wins")) {
       scores.X++;
@@ -192,6 +220,7 @@ function screenController() {
     }
   };
 
+  // ADD event listener to all cells
   cells.forEach((cell, index) => {
     const row = Math.floor(index / 3);
     const col = index % 3;
@@ -207,12 +236,14 @@ function screenController() {
     });
   });
 
+  // Restart game
   const restartGame = () => {
     cells.forEach(c => c.textContent = "");
     updateStatus("Player X's turn");
     game.restartGame();
   };
 
+  // Reset scores 
   const resetScores = () => {
     scores = { X: 0, O: 0, D: 0 };
     scoreX.textContent = 0;
@@ -221,8 +252,10 @@ function screenController() {
     restartGame();
   };
 
+  // Add button event listeners
   restartBtn.addEventListener("click", restartGame);
   resetScoreBtn.addEventListener("click", resetScores);
 }
 
-screenController();
+// Start the game
+ScreenController();
