@@ -134,16 +134,27 @@ function GameController(playerOne = 'Player X', playerTwo = 'Player O') {
       return "It's a draw!";
     }
 
-    const statusMessage = switchPlayer(); 
+    const statusMessage = switchPlayer();
     printRound();
     return statusMessage;
-  }
+  };
+
+  const restartGame = () => {
+    activePlayer = players[0];
+    gameOver = false;
+    for(let i =0; i<3; i++){
+      for(let j = 0; j<3; j++){
+        board.getBoard()[i][j].addToken(' ');
+      }
+    }
+  };
 
   printRound();
 
   return {
     getActivePlayer,
-    playRound
+    playRound,
+    restartGame
   };
 }
 
@@ -153,6 +164,8 @@ function screenController() {
   const scoreX = document.querySelector(".score-x");
   const scoreO = document.querySelector(".score-o");
   const scoreDraw = document.querySelector(".draw");
+  const restartBtn = document.querySelector(".restart-button");
+  const resetScoreBtn = document.querySelector(".reset-score");
 
   const game = GameController();
 
@@ -167,13 +180,13 @@ function screenController() {
   };
 
   const updateScoreBoard = (message) => {
-    if(message.includes("Player X wins")){
+    if (message.includes("Player X wins")) {
       scores.X++;
       scoreX.textContent = scores.X;
-    } else if(message.includes("Player O wins")){
+    } else if (message.includes("Player O wins")) {
       scores.O++;
       scoreO.textContent = scores.O;
-    } else if(message.includes("It's a draw!")){
+    } else if (message.includes("It's a draw!")) {
       scores.D++;
       scoreDraw.textContent = scores.D;
     }
@@ -185,7 +198,7 @@ function screenController() {
 
     cell.addEventListener("click", () => {
       const token = game.getActivePlayer().token;
-      if(cell.textContent === ""){
+      if (cell.textContent === "") {
         cell.textContent = token;
       }
       const message = game.playRound(row, col);
@@ -193,6 +206,23 @@ function screenController() {
       updateScoreBoard(message);
     });
   });
+
+  const restartGame = () => {
+    cells.forEach(c => c.textContent = "");
+    updateStatus("Player X's turn");
+    game.restartGame();
+  };
+
+  const resetScores = () => {
+    scores = { X: 0, O: 0, D: 0 };
+    scoreX.textContent = 0;
+    scoreO.textContent = 0;
+    scoreDraw.textContent = 0;
+    restartGame();
+  };
+
+  restartBtn.addEventListener("click", restartGame);
+  resetScoreBtn.addEventListener("click", resetScores);
 }
 
 screenController();
