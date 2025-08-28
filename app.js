@@ -12,6 +12,9 @@ function GameBoard() {
     }
   }
 
+  // Return total no. of rows and columns
+  const getDimensions = () => ({ rows, columns });
+
   // Returns the current board
   const getBoard = () => board;
 
@@ -23,14 +26,10 @@ function GameBoard() {
     }
   };
 
-  // const printBoard = () => {
-  //   console.log(board.map(row => row.map(cell => cell.getValue())));
-  // };
-
   return {
+    getDimensions,
     getBoard,
-    dropToken,
-    //printBoard
+    dropToken
   };
 }
 
@@ -122,11 +121,6 @@ function GameController(playerOne = 'Player X', playerTwo = 'Player O') {
     return board.getBoard().every(row => row.every(cell => cell.getValue() !== ' '));
   }
 
-  // const printRound = () => {
-  //   board.printBoard();
-  //   if (!gameOver) console.log(`${activePlayer.playerName}'s turn.`);
-  // }
-
   // Main function to play a round 
   const playRound = (row, col) => {
     if (gameOver) return "Game Over"; //  Stop if game is over
@@ -141,23 +135,18 @@ function GameController(playerOne = 'Player X', playerTwo = 'Player O') {
 
     // Check for win
     if (checkWin(r, c)) {
-      // board.printBoard();
-      // console.log(`${activePlayer.playerName} wins!`);
       gameOver = true;
       return `${activePlayer.playerName} wins!`;
     }
 
     // Check for draw
     if (isBoardFull()) {
-      // board.printBoard();
-      // console.log("It's a draw!");
       gameOver = true;
       return "It's a draw!";
     }
 
     // Switch player
     const statusMessage = switchPlayer();
-    //printRound();
     return statusMessage;
   };
 
@@ -165,19 +154,22 @@ function GameController(playerOne = 'Player X', playerTwo = 'Player O') {
   const restartGame = () => {
     activePlayer = players[0];
     gameOver = false;
-    for(let i =0; i<3; i++){
-      for(let j = 0; j<3; j++){
+    const { rows, columns } = board.getDimensions();
+    for(let i =0; i<rows; i++){
+      for(let j = 0; j<columns; j++){
         board.getBoard()[i][j].addToken(' ');
       }
     }
   };
 
-  //printRound();
+  // Return whether the game is over
+  const isGameOver = () => gameOver;
 
   return {
     getActivePlayer,
     playRound,
-    restartGame
+    restartGame,
+    isGameOver
   };
 }
 
@@ -227,7 +219,7 @@ function ScreenController() {
 
     cell.addEventListener("click", () => {
       const token = game.getActivePlayer().token;
-      if (cell.textContent === "") {
+      if ((cell.textContent === "") && !game.isGameOver()) {
         cell.textContent = token;
       }
       const message = game.playRound(row, col);
