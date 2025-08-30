@@ -37,6 +37,11 @@ A responsive and interactive **Tic-Tac-Toe web game** built using **HTML, CSS, a
 
 ---
 
+## Live Preview
+Play the game live here:  [**Click to Play Tic-Tac-Toe**]( https://sanskriti3104.github.io/Tic-Tac-Toe/) 
+
+---
+
 ## Project Structure
 Tic-Tac-Toe/
 
